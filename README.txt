@@ -1,6 +1,6 @@
 README
 
-This Django project requires a DB (Ideally a PosgreSQL DB) and a .env file containing relevant database settings.
+This Django project requires a DB (Ideally a PostgreSQL DB) and a .env file containing relevant database settings.
 The .env requires the following fields:
 - DB_ENGINE
 - DB_NAME
