@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import dotenv, os
+from django.urls import reverse_lazy
 
 #loads environment variables
 dotenv.load_dotenv()
@@ -30,6 +31,8 @@ SECRET_KEY = 'django-insecure-xeq44vbkfg-@a4klhmvpi40%b@m3+&1!te83@0@ikt2-9=evh9
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+LOGIN_URL = reverse_lazy("records_manager:login")
 
 
 # Application definition
@@ -59,7 +62,7 @@ ROOT_URLCONF = 'Proj.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
