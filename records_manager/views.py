@@ -1,19 +1,22 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, models
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.views import generic
+
+from .models import Record, Category
 
 def index(request):
     return HttpResponse("records_manager Index")
 
-def login(request):
+def login_view(request):
     try:
         username = request.POST["username"]
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request)
+            login(request,user)
             response = HttpResponseRedirect(reverse("records_manager:home"))
         else:
             response = render(request, "records_manager/login.html",{"error_message":"Invalid login details"})
@@ -24,6 +27,14 @@ def login(request):
 @login_required
 def home(request):
     return HttpResponse("Home")
+
+class HomeView(generic.ListView):
+    template_name = "records_manager/home.html"
+    context_object_name = "records"
+
+    def get_queryset(self):
+        print(self.request.user.groups.all())
+        return Record.objects.order_by("created_date").filter(category__group__name__contains="OIM")
 
 def create_record(request):
     return HttpResponse("create record")

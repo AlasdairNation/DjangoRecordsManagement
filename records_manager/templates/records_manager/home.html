@@ -1,0 +1,11 @@
+<h1> Records Manager </h1>
+
+{% if records %}
+    <ul>
+    {% for record in records %}
+        {{ record.name }} - {{record.category}} - {{record.category.group}} <br>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No records are available.</p>
+{% endif %}

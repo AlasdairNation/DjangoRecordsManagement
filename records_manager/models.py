@@ -25,3 +25,6 @@ class Record(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def user_set(self):
+        return self.category.group.user_set
