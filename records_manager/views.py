@@ -33,8 +33,9 @@ class HomeView(generic.ListView):
     context_object_name = "records"
 
     def get_queryset(self):
-        print(self.request.user.groups.all())
-        return Record.objects.order_by("created_date").filter(category__group__name__contains="OIM")
+        group_names = list(self.request.user.groups.values_list('name',flat=True))
+        print(group_names)
+        return Record.objects.order_by("created_date").filter(category__group__name__in=group_names)
 
 def create_record(request):
     return HttpResponse("create record")
