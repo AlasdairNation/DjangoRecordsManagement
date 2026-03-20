@@ -1,0 +1,25 @@
+<h1> Create </h1>
+
+<form method="post" form action = "{% url 'records_manager:create_record'%}">
+    {% csrf_token %}
+    <label for= "name">Name:</label>
+    <br>
+    <input type="text" id="name" name="name">
+    <br>
+    <label for= "description">Description:</label>
+    <br>
+    <input type="text" id="description" name="description"> 
+    <br>
+    {% if category_list %}
+        <label for= "category">Category:</label>
+        <br>
+        <select name="category" id="category">
+            {% for category in category_list %}
+                <option>{{category.name}}</option>
+            {% endfor %}
+        </select>
+    {% endif %}
+    <br>
+    <br>
+    <input type="submit" value="Create">
+</form>

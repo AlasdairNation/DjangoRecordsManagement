@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.db.models import Q
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 from .models import Record, Category
 
@@ -74,7 +76,27 @@ class EditRecordView(generic.DetailView):
         return HttpResponseRedirect(reverse("records_manager:records"))
 
 
+class CreateRecordView(generic.TemplateView):
+    model = Record
+    template_name = "records_manager/create_record.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["category_list"] = Category.objects.all()
+        return context
+
+    def post(self, request):
+        name = request.POST["name"]
+        description = request.POST["description"]
+        category = Category.objects.get(name=request.POST["category"])
+        creator = request.user
+        created_date = timezone.now()
+
+        record = Record.objects.create(name=name, description=description, category = category, creator=creator, created_date = created_date)
+
+        record.save()
+
+        return HttpResponseRedirect(reverse("records_manager:records"))
     
 
 def search_categories(request):
