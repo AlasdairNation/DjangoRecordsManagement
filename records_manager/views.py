@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, models
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.views import generic
+from django.db.models import Q
 
 from .models import Record, Category
 
@@ -17,31 +18,64 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request,user)
-            response = HttpResponseRedirect(reverse("records_manager:home"))
+            response = HttpResponseRedirect(reverse("records_manager:records"))
         else:
             response = render(request, "records_manager/login.html",{"error_message":"Invalid login details"})
     except:
         response = render(request, "records_manager/login.html")
     return response
 
-@login_required
-def home(request):
-    return HttpResponse("Home")
-
-class HomeView(generic.ListView):
-    template_name = "records_manager/home.html"
+class RecordListView(generic.ListView):
+    template_name = "records_manager/record_list.html"
     context_object_name = "records"
 
     def get_queryset(self):
+        try:
+           query_string = self.request.GET["search"]
+        except:
+           query_string = None
+        
         group_names = list(self.request.user.groups.values_list('name',flat=True))
-        print(group_names)
-        return Record.objects.order_by("created_date").filter(category__group__name__in=group_names)
+        records = Record.objects.order_by("created_date").filter(category__group__name__in=group_names)
+
+        if query_string:
+            records = records.filter(Q(name__contains=query_string) | Q(description__contains=query_string))
+        return records
 
 def create_record(request):
     return HttpResponse("create record")
 
-def view_record(request):
-    return HttpResponse("view record")
+class RecordView(generic.DetailView):
+    model = Record
+    template_name = "records_manager/record_details.html"
+
+class EditRecordView(generic.DetailView):
+    model = Record
+    template_name = "records_manager/edit_record_details.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["category_list"] = Category.objects.all()
+        return context
+
+    def post(self, request, pk):
+        print(request.POST)
+        name = request.POST["name"]
+        description = request.POST["description"]
+        category = request.POST["category"]
+
+        record = Record.objects.get(pk=pk)
+
+        record.name = name
+        record.description = description
+        record.category = Category.objects.get(name=category)
+        record.save()
+
+        return HttpResponseRedirect(reverse("records_manager:records"))
+
+
+
+    
 
 def search_categories(request):
     return HttpResponse("search categories")

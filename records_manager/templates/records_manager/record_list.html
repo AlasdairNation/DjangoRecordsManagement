@@ -1,0 +1,31 @@
+<h1> Records Manager </h1>
+
+<form method="get" form action = "{% url 'records_manager:records'%}">
+    <input type="text" id="search" name="search"> 
+    <input type="submit" value="search">
+</form>
+
+<br>
+
+{% if records %}
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Group</th>
+            <th>Created By</th>
+            <th>Created Date</th>
+        </tr>
+            {% for record in records %}
+            <tr>
+                <td><li><a href="/records_manager/records/{{record.id}}/view/"> {{record.name}} </a></li></td>
+                <td>{{record.category}}</td>
+                <td>{{record.category.group}}</td>
+                <td>{{record.creator}}</td>
+                <td>{{record.created_date}}</td>
+            </tr>
+            {% endfor %}
+    </table>
+{% else %}
+    <p>No records are available.</p>
+{% endif %}

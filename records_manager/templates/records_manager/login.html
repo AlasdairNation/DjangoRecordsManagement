@@ -1,6 +1,6 @@
 <h1> Log in </h1>
 
-<form method="post" form action = "{% url 'records_manager:login'%}">
+<form method="post" form action = "{% url 'records_manager:login'%} ">
     {% csrf_token %}
     <label for= "username">Username:</label>
     <br>

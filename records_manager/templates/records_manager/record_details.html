@@ -1,0 +1,23 @@
+<h1> Record </h1>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Category</th>
+            <th>Group</th>
+            <th>Created By</th>
+            <th>Created Date</th>
+        </tr>
+            <tr>
+                <td>{{record.name}}</td>
+                <td>{{record.description}} </td>
+                <td>{{record.category}}</td>
+                <td>{{record.category.group}}</td>
+                <td>{{record.creator}}</td>
+                <td>{{record.created_date}}</td>
+            </tr>
+    </table>
+
+<form action="{% url 'records_manager:edit_record_details' record.id%}">
+    <input type="submit" value="Edit" />
+</form>
