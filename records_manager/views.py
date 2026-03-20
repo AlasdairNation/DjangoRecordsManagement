@@ -1,17 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login, models
+from django.contrib.auth import authenticate, login
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.db.models import Q
-from django.contrib.auth.models import User
 from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 from .models import Record, Category
 
 def index(request):
-    return HttpResponse("records_manager Index")
+    return HttpResponseRedirect(reverse("records_manager:login"))
 
 def login_view(request):
     try:
@@ -27,7 +27,7 @@ def login_view(request):
         response = render(request, "records_manager/login.html")
     return response
 
-class RecordListView(generic.ListView):
+class RecordListView(LoginRequiredMixin, generic.ListView):
     template_name = "records_manager/record_list.html"
     context_object_name = "records"
 
@@ -44,14 +44,11 @@ class RecordListView(generic.ListView):
             records = records.filter(Q(name__contains=query_string) | Q(description__contains=query_string))
         return records
 
-def create_record(request):
-    return HttpResponse("create record")
-
-class RecordView(generic.DetailView):
+class RecordView(LoginRequiredMixin,generic.DetailView):
     model = Record
     template_name = "records_manager/record_details.html"
 
-class EditRecordView(generic.DetailView):
+class EditRecordView(LoginRequiredMixin, generic.DetailView):
     model = Record
     template_name = "records_manager/edit_record_details.html"
 
@@ -76,7 +73,7 @@ class EditRecordView(generic.DetailView):
         return HttpResponseRedirect(reverse("records_manager:records"))
 
 
-class CreateRecordView(generic.TemplateView):
+class CreateRecordView(LoginRequiredMixin, generic.TemplateView):
     model = Record
     template_name = "records_manager/create_record.html"
 
@@ -107,8 +104,3 @@ def create_category(request):
 
 def view_category(request):
     return HttpResponse("view & search for records in a single category")
-
-
-def verify_auth(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse("records_manager:login"))
