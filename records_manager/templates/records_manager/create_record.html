@@ -1,5 +1,9 @@
 <h1> Create </h1>
 
+    <form action="{% url 'records_manager:records'%}">
+        <input type="submit" value="Back" />
+    </form>
+
 <form method="post" form action = "{% url 'records_manager:create_record'%}">
     {% csrf_token %}
     <label for= "name">Name:</label>

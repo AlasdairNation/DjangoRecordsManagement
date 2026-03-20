@@ -1,5 +1,9 @@
 <h1> Records Manager </h1>
 
+    <form action="{% url 'records_manager:login'%}">
+        <input type="submit" value="Log Out" />
+    </form>
+
 <form method="get" form action = "{% url 'records_manager:records'%}">
     <input type="text" id="search" name="search"> 
     <input type="submit" value="search">
@@ -29,3 +33,7 @@
 {% else %}
     <p>No records are available.</p>
 {% endif %}
+
+    <form action="{% url 'records_manager:create_record'%}">
+        <input type="submit" value="Create Record" />
+    </form>

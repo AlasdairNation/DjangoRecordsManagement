@@ -1,5 +1,9 @@
 <h1> Edit </h1>
 
+    <form action="{% url 'records_manager:record_details' record.id%}">
+        <input type="submit" value="Back" />
+    </form>
+
 <form method="post" form action = "{% url 'records_manager:edit_record_details' record.id %}">
     {% csrf_token %}
     <label for= "name">Name:</label>
