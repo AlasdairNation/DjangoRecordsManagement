@@ -10,3 +10,5 @@ The .env requires the following fields:
 - DB_PORT
 
 These fields populate the relevenat database fields in the projects settings.py file.
+
+This project was created as a challenge project to help solidify my understanding of Django.
